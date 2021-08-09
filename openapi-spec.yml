@@ -1,0 +1,138 @@
+openapi: 3.0.0
+
+info:
+  title: user-service
+  description: A service for creating, retrieving, updating, and deleting users.
+  version: 0.1.0
+
+paths:
+  /users:
+    post:
+      operationId: create
+      summary: Creates a new user.
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        201:
+          description: The user was created successfully.
+        400:
+          $ref: '#/components/responses/Error'
+  /users/{email}:
+    get:
+      operationId: retrieve
+      summary: Retrieve an existing user.
+      parameters:
+        - name: email
+          in: path
+          description: User email.
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        200:
+          $ref: '#/components/responses/User'
+        400:
+          $ref: '#/components/responses/Error'
+        404:
+          $ref: '#/components/responses/Error'
+    put:
+      operationId: update
+      summary: Update an existing user.
+      parameters:
+        - name: email
+          in: path
+          description: User email.
+          required: true
+          schema:
+            type: string
+            format: email
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        204:
+          description: The user was updated successfully.
+        400:
+          $ref: '#/components/responses/Error'
+        404:
+          $ref: '#/components/responses/Error'
+    delete:
+      operationId: delete
+      summary: Delete an existing user.
+      parameters:
+        - name: email
+          in: path
+          description: User email.
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        204:
+          description: The user was deleted successfully.
+        400:
+          $ref: '#/components/responses/Error'
+
+components:
+  requestBodies:
+    User:
+      description: A user request.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+
+  responses:
+    User:
+      description: A user response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    Error:
+      description: An unexpected error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    User:
+      description: A user.
+      type: object
+      example: |
+        {
+          "email": "some.one@email.com",
+          "password": "s0m3s3cr3tp455w0rd",
+          "firstName": "Some",
+          "lastName": "One"
+        }
+      properties:
+        email:
+          description: The email of the user.
+          type: string
+        password:
+          description: The password of the user.
+          type: string
+        firstName:
+          description: The users first name.
+          type: string
+        lastName:
+          description: The users last name.
+          type: string
+      required:
+        - email
+        - password
+    Error:
+      description: An error.
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    AnyValue: { }
