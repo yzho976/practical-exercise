@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vec.practicalexercise.mapper.UserDao">
+
+    <resultMap id="BaseResultMap" type="com.vec.practicalexercise.entity.User">
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="firstName" jdbcType="VARCHAR" property="firstName" />
+        <result column="lastName" jdbcType="VARCHAR" property="lastName" />
+    </resultMap>
+
+    <select id="getUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM User WHERE email = #{email,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="addUser" parameterType="com.vec.practicalexercise.entity.User">
+        INSERT INTO User
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="firstName != null">
+                #{firstName,jdbcType=VARCHAR},
+            </if>
+            <if test="lastName != null">
+                #{lastName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUser">
+        UPDATE User
+        <set>
+            <if test="content.email != null">
+                email = #{content.email,jdbcType=VARCHAR},
+            </if>
+            <if test="content.password != null">
+                password = #{content.password,jdbcType=VARCHAR},
+            </if>
+            <if test="content.firstName != null">
+                firstName = #{content.firstName,jdbcType=VARCHAR},
+            </if>
+            <if test="content.lastName != null">
+                lastName = #{content.lastName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE email = #{keyEmail,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteUser" parameterType="java.lang.String">
+        DELETE FROM User
+        WHERE email = #{email,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>
